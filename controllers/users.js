@@ -1,0 +1,44 @@
+const JWT = require('jsonwebtoken');
+const User = require('../models/user');
+const {JWT_SECRET}= require('../config');
+signToken = user =>{
+    return JWT.sign({
+        iss: 'meshyat',
+        sub: user.id,
+        iat: new Date().getTime(),
+        exp: new Date().setDate(new Date().getDate() + 1)
+    },JWT_SECRET);
+}
+module.exports={
+    signUp: async (req,res, next)=>{
+        
+        
+        const email = req.value.body.email;
+        const password = req.value.body.password;
+        const foundUser = await User.findOne({email: email});
+        if(foundUser){
+           return res.status(403).send({error:'Email already exist'});
+        }
+        const newUser = new User({
+            email:email,
+            password:password
+        })
+       newUser.save();
+      // res.json({user:"Created"});
+        const token = signToken(newUser);
+      res.status(200).json({token: token});
+    },
+    
+    signIn: async (req,res, next) =>{
+        
+        const token = signToken(req.user);   
+        res.status(200).json({token: token});
+     
+    },
+
+    secret: async (req,res, next) =>{
+
+        console.log('I managed to get here');
+        
+    }
+};
