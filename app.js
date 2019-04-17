@@ -13,6 +13,8 @@ app.use(bodyParser.json());
 
 //Routes
 app.use('/users/',require('./routes/users'));
+app.use('/groups/',require('./routes/groups'));
+
 
 //Start the server
 
