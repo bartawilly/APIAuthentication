@@ -3,6 +3,7 @@ const router = require('express-promise-router')();
 const {validateBody, schemas} = require('../helpers/routeshelpers');
 const usersController = require('../controllers/users');
 const passportConfig = require('../passport');
+const {JWTAdminAuthorization} = require('../helpers/authorization');
 
 const passport = require('passport');
 
@@ -16,6 +17,6 @@ router.route('/user-to-group')
     .post(validateBody(schemas.addUserGroupSchema), passport.authenticate('jwt',{session: false}), usersController.addUserToGroup);
 
 router.route('/secret')
-    .get(passport.authenticate('jwt',{session: false}), usersController.secret);
+    .get(passport.authenticate('jwt',{session: false}),JWTAdminAuthorization(), usersController.secret);
 
 module.exports = router;

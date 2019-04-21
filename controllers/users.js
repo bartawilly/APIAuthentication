@@ -25,15 +25,26 @@ module.exports={
             password:password
         })
        newUser.save();
-      // res.json({user:"Created"});
+       defaultGroup = 'users';
+       newUser.addUserToGroup(newUser._id,defaultGroup);
         const token = signToken(newUser);
       res.status(200).json({token: token});
     },
     
     signIn: async (req,res, next) =>{
+        const token = signToken(req.user); 
+        const foundUser = User.findOne({id: req.user._id});
+        if(!foundUser){
+            res.status(403).send({error:'User is not exist'});
+            }
+        const user = new User();
+        var userGroup = await user.getUserGroup(req.user._id);
         
-        const token = signToken(req.user);   
-        res.status(200).json({token: token});
+        if(userGroup==='admins'){
+            res.status(200).send({success:"you are admin", token:token});                }
+        else{
+            res.status(200).send({success:"you are normal user", token:token}); 
+        }      
      
     },
 

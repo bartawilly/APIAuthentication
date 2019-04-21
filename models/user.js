@@ -61,14 +61,20 @@ userSchema.methods.removeUserFromGroup = async function (userId) {
 }
 userSchema.methods.getUserGroup = async function (userId) {
     try{
-        await Group.find({}, function(err, groups) {
-            if(err) throw err;
+        let groupName;
+        let groups = await Group.find({});
+        if(groups && groups.length>0){
+            let group = groups.find((g)=>{
+                return g.members.indexOf(userId)!=-1
+            });
+            if(group) {
+            groupName = group.name;
+            }
+        }
+        
+
+        return groupName;
     
-        groups.forEach(function(group, err) {
-            if(group.members.indexOf(userId)) return group.name;
-        });
-    
-        });
     }catch(error){
         throw new Error(error);
     }
