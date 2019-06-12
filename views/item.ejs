@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+  <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+        <div class="content">
+            <% if (errorMsg) { %>
+              <div class="alert alert-danger"><%= errorMsg %></div>
+          <% } %>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">Add New Item</h5>
+                </div>
+                <div class="card-body">
+
+                  <form action="/items/saveitem/" method="post" name="saveItem">
+                    <div class="row">
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                            <label>Code</label>
+                            <input type="text" name="code" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                              <label>Name</label>
+                              <input type="text" name="name" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 pr-1">
+                            <div class="form-group">
+                            <label>Cost</label>
+                            <input type="number" name="cost" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4 pr-1">
+                            <div class="form-group">
+                                <label>Price</label>
+                                <input type="number" name="price" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4 pr-1">
+                            <div class="form-group">
+                                <label>Disount(Pounds)</label>
+                                <input type="number" name="discount" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 pr-1">
+                            <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" name="quantity" class="form-control" min="1" value="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                                <label>Provider</label>
+                                <select class="form-control border-input" placeholder="Choose a provider" name="providerId">
+                                        <% if (providers) { %>
+                                        <% for (var i =0; i<providers.length;i++) { %>
+                                        <option value="<%=providers[i].id%>"><%=providers[i].name%></option>
+                                        <% } %>
+                                        <% } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                                <label>Provider</label>
+                                <select class="form-control border-input" placeholder="Choose a category" name="categoryId">
+                                        <% if (categories) { %>
+                                        <% for (var i =0; i<categories.length;i++) { %>
+                                        <option value="<%=categories[i].id%>"><%=categories[i].name%></option>
+                                        <% } %>
+                                        <% } %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="update ml-auto mr-auto">
+                          <button type="submit" class="btn btn-primary btn-round">Add Item</button>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <h5 class="card-title">Add Existing Item</h5>
+                    </div>
+                    <div class="card-body">
+    
+                      <form action="/items/updateitemquantity/" method="post" name="updateItemQuantity">
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                  <label>Name</label>
+                                  <select class="form-control border-input" placeholder="Choose a provider" name="itemId">
+                                        <% if (items) { %>
+                                        <% for (var i =0; i<items.length;i++) { %>
+                                        <option value="<%=items[i].id%>"><%=items[i].name%></option>
+                                        <% } %>
+                                        <% } %>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label>Quantity</label>
+                                    <input type="number" name="quantity" class="form-control" min="1" value="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="update ml-auto mr-auto">
+                              <button type="submit" class="btn btn-primary btn-round">Add Exoense</button>
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h4 class="card-title">Item Table</h4>
+                      </div>
+
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table">
+                                  <thead class=" text-primary">
+                                    <th>ID</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Cost</th>
+                                    <th>Price</th>
+                                    <th>Discount</th>
+                                    <th>finalPrice</th>
+                                    <th>Quantity</th>
+                                    <th>Provider</th>
+                                    <th>Category</th>
+                                    <th>createdAt</th>
+                                    <th>updatedAt</th>
+                                    <th></th>
+                                    <th></th>
+                                  </thead>
+                                  <tbody>
+                                  <% if (items) { %>
+                                  <% for (var i =0; i<items.length;i++ ) { %>
+                                    <tr>
+                                      <td><%=items[i].id%></td>
+                                      <td><%=items[i].code%></td>
+                                      <td><%=items[i].name%></td>
+                                      <td><%=items[i].cost%></td>
+                                      <td><%=items[i].price%></td>
+                                      <td><%=items[i].discount%></td>
+                                      <td><%=items[i].finalPrice%></td>
+                                      <td><%=items[i].quantity%></td>
+                                      <td><%=itemProviders[i].name%></td>
+                                      <td><%=itemCategories[i].name%></td>
+                                      <td><%=items[i].createdAt%></td>
+                                      <td><%=items[i].updatedAt%></td>
+                                      <td>
+                                          <a data-toggle="modal" data-target="#updateItem" onclick="updateItemModal(`<%=items[i].id%>`,`<%=items[i].code%>`,`<%=items[i].name%>`,`<%=items[i].cost%>`,`<%=items[i].price%>`,`<%=items[i].discount%>`, `<%=items[i].quantity%>`,`<%=itemProviders[i].id%>`, `<%=itemCategories[i].id%>`)" ><button class="btn btn-primary btn-round">Update</button></a>
+                                      </td>
+                                      <td>
+                                        <form action="/items/removeitem/" method="post" name="removeitem">
+                                          <input type="hidden"  name="id" value="<%=items[i].id%>">
+                                          <button type="submit" class="btn btn-danger">Remove</button>
+                                        </form>
+                                      </td>
+                                    </tr>
+                                    <% } %>
+                                    <% } %>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+          </div>
+
+          <!--   *****************Edit Item Modal******************        -->
+          <div class="modal fade" id="updateItem" role="dialog">
+              <div class="modal-dialog modal-lg">
+                  <div class="modal-content text-left">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Update Item</h4>
+                      </div>
+                      <div class="modal-body">
+                          <form method="post" action="/items/saveitem" name="updateItem" id="updateItemForm">
+                            <input type="hidden" name="id">
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                    <label>Code</label>
+                                    <input type="text" name="code" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" name="name" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group">
+                                    <label>Cost</label>
+                                    <input type="number" name="cost" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group">
+                                        <label>Price</label>
+                                        <input type="number" name="price" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group">
+                                        <label>Disount(Pounds)</label>
+                                        <input type="number" name="discount" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pr-1">
+                                    <div class="form-group">
+                                        <label>Quantity</label>
+                                        <input type="number" name="quantity" class="form-control" min="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label>Provider</label>
+                                        <select class="form-control border-input" placeholder="Choose a provider" name="providerId" >
+                                                <% if (providers) { %>
+                                                <% for (var i =0; i<providers.length;i++) { %>
+                                                <option value="<%=providers[i].id%>"><%=providers[i].name%></option>
+                                                <% } %>
+                                                <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label>Provider</label>
+                                        <select class="form-control border-input" placeholder="Choose a category" name="categoryId">
+                                                <% if (categories) { %>
+                                                <% for (var i =0; i<categories.length;i++) { %>
+                                                <option value="<%=categories[i].id%>"><%=categories[i].name%></option>
+                                                <% } %>
+                                                <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                                
+                              <div class="text-center">
+                                  <button type="submit" class="btn btn-primary btn-round">Update</button>
+                              </div>
+                              <div class="clearfix"></div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <% include partials/footer.ejs %>
+      </div>
+    </div>
+  </div>
+  <% include partials/scripts.ejs %>
+  <script>
+  $(function() {
+    
+    $("form[name='saveItem']").validate({
+      rules: {
+        code: "required",
+        name: "required",
+        cost: "required",
+        price:"required",
+        quantity:"required",
+        providerId: "required",
+        categoryId: "required"
+      },
+      
+      messages: {
+        code: "Please enter Item Code",
+        name: "Please enter Item Name",
+        cost: "Please enter Item Cost",
+        price:"Please enter Item Price",
+        quantity:"Please enter Item Quantity",
+        providerId: "Please Choose the item Provider",
+        categoryId: "Please Choose the item Category "
+      },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+  });
+  $(function() {
+    
+    $("form[name='updateItemQuantity']").validate({
+      rules: {
+        itemId: "required",
+        quantity:"required"
+       
+      },
+      
+      messages: {
+        itemId: "Please Select Item Name",
+        quantity:"Please enter Item Quantity"
+      },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+  });
+  $(function() {
+    
+    $("form[name='updateItem']").validate({
+        rules: {
+            code: "required",
+            name: "required",
+            cost: "required",
+            price:"required",
+            quantity:"required",
+            providerId: "required",
+            categoryId: "required"
+          },
+          
+          messages: {
+            code: "Please enter Item Code",
+            name: "Please enter Item Name",
+            cost: "Please enter Item Cost",
+            price:"Please enter Item Price",
+            quantity:"Please enter Item Quantity",
+            providerId: "Please Choose the item Provider",
+            categoryId: "Please Choose the item Category "
+          },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+  });
+  function updateItemModal(id, code, name, cost, price, discount, quantity, providerId, categoryId){
+    let form = document.forms['updateItemForm'];
+    form.elements["id"].value = id;
+    form.elements["code"].value = code;
+    form.elements["name"].value = name;
+    form.elements["cost"].value = cost;
+    form.elements["price"].value = price;
+    form.elements["discount"].value = discount;
+    form.elements["quantity"].value = quantity;
+    form.elements["providerId"].value = providerId;
+    form.elements["categoryId"].value = categoryId;
+
+  };
+  </script>
+</body>
+
+</html>

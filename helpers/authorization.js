@@ -7,19 +7,18 @@ const jwt = require('jsonwebtoken');
 
 
 module.exports={
-    JWTAdminAuthorization:  function (){
+   /* JWTAdminAuthorization:  function (){
         return async (req, res, next) =>{
             try{
-                var token = req.headers['authorization'];
+                if (req && req.cookies) token = req.cookies['jwt'];
                 token = jwt.decode(token);
                 const foundUser = User.findOne({id: token.sub});
                 if(!foundUser){
                  res.status(403).send({error:'User is not exist'});
                  }
                 const user = new User();
-                var userGroup = await user.getUserGroup(token.sub);
                 
-                if(userGroup==='admins'){
+                if(await user.isAdmin(token.sub)){
                     next();
                 }
                 else{
@@ -30,5 +29,10 @@ module.exports={
             }
         }
        
-    }
+    },*/
+    cookieTokenExtractor : function(req) {
+        var token = null;
+        if (req && req.cookies) token = req.cookies['jwt'];
+        return token;
+      }
 };

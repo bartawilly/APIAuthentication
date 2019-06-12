@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+  <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+    <div class="main-panel">
+      <!-- Navbar -->
+      <% include partials/nav.ejs %>
+      <!-- End Navbar -->
+      <!-- <div class="panel-header panel-header-sm">
+  
+  
+</div> -->
+      <div class="content">
+          <% if (errorMsg) { %>
+            <div class="alert alert-danger"><%= errorMsg %></div>
+        <% } %>
+          <div class="row">
+            <div class="col-md-12">
+                <a data-toggle="modal" data-target="#addGroup" ><button class="btn btn-primary btn-round">Add new group</button></a>
+            </div>
+          </div>
+          <% if (groupsUsers && groups) { %>
+          <% for (var i =0; i<groupsUsers.length;i++ ) { %>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-md-8">
+                      <h4 class="card-title"> <%= groups[i].name %> Table</h4>
+                  </div>
+                  <div class="col-md-4">
+                      <form action="/groups/removegroup" method="post" name="removegroup">
+                        <input type="hidden"  name="name" value="<%= groups[i].name %>">
+                        <button type="submit" class="btn btn-danger">Remove group</button>
+                     </form>
+                  </div>
+                </div>
+                
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class=" text-primary">
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Email</th>
+                      
+                      <th></th>
+                      <th></th>
+                    </thead>
+                    <tbody>
+                        <% var groupUsers = groupsUsers[i] %>
+                        <% for (var j =0; j <groupUsers.length; j++ ) { %>
+                      <tr>
+                        <td><%=groupUsers[j].firstName%></td>
+                        <td><%=groupUsers[j].lastName%></td>
+                        <td><%=groupUsers[j].email%></td>
+                        <td>
+                            <% if (groups[i].name == 'admins'){ %>
+                            <form action="/users/removeadmin" method="post" name="removeadmin">
+                                <input type="hidden"  name="id" value="<%=groupUsers[j]._id%>">
+                              <button type="submit" class="btn btn-danger">remove Admin</button>
+                            </form>
+                            <% } else {%>
+                              <form action="/users/makeadmin" method="post" name="makeadmin">
+                                <input type="hidden"  name="id" value="<%=groupUsers[j]._id%>">
+                                <button type="submit" class="btn btn-primary btn-round">Make Admin</button>
+                             </form>
+                            <% } %>
+                        </td>
+                        <td>
+                          <form action="/users/removeuser" method="post" name="removeuser">
+                            <input type="hidden"  name="id" value="<%=groupUsers[j]._id%>">
+                            <button type="submit" class="btn btn-danger">Permanently remove</button>
+                          </form>
+                        </td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% } %>
+        <% } %>
+      </div>
+        <!--   *****************Group Modal******************        -->
+        <div class="modal fade" id="addGroup" role="dialog">
+          <div class="modal-dialog modal-lg">
+              <div class="modal-content text-left">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Add New Group</h4>
+                  </div>
+                  <div class="modal-body">
+                      <form method="post" action="/groups/addgroup" name="addgroup">
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="form-group">
+                                      <label>Group name</label>
+                                      <input type="text" class="form-control border-input" name="name">
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="text-center">
+                              <button type="submit" class="btn btn-primary btn-round">Add group</button>
+                          </div>
+                          <div class="clearfix"></div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <% include partials/footer.ejs %>
+    </div>
+  </div>
+  <% include partials/scripts.ejs %>
+</body>
+
+</html>

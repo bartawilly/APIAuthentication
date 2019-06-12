@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+  <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+        <div class="content">
+            <% if (errorMsg) { %>
+              <div class="alert alert-danger"><%= errorMsg %></div>
+          <% } %>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">Add New Category</h5>
+                </div>
+                <div class="card-body">
+
+                  <form action="/categories/savecategory/" method="post" name="saveCategory">
+                    <div class="row">
+                      <div class="col-md-12 pr-1">
+                        <div class="form-group">
+                          <label>Name</label>
+                          <input type="text" name="name" class="form-control">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                        <div class="update ml-auto mr-auto">
+                          <button type="submit" class="btn btn-primary btn-round">Add Category</button>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h4 class="card-title">Categories Table</h4>
+                      </div>
+
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table">
+                                  <thead class=" text-primary">
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>createdAt</th>
+                                    <th>updatedAt</th>
+                                    <th></th>
+                                    <th></th>
+                                  </thead>
+                                  <tbody>
+                                  <% if (categories) { %>
+                                  <% for (var i =0; i<categories.length;i++ ) { %>
+                                    <tr>
+                                      <td><%=categories[i].id%></td>
+                                      <td><%=categories[i].name%></td>
+                                      <td><%=categories[i].createdAt%></td>
+                                      <td><%=categories[i].updatedAt%></td>
+                                      <td>
+                                          <a data-toggle="modal" data-target="#updateCategory" onclick="updateCategoryModal(`<%=categories[i].id%>`,`<%=categories[i].name%>`,`<%=categories[i].address%>`,`<%=categories[i].email%>`,`<%=categories[i].phone%>`)" ><button class="btn btn-primary btn-round">Update</button></a>
+                                      </td>
+                                      <td>
+                                        <form action="/categories/removecategory/" method="post" name="removecategory">
+                                          <input type="hidden"  name="id" value="<%=categories[i].id%>">
+                                          <button type="submit" class="btn btn-danger">Remove</button>
+                                        </form>
+                                      </td>
+                                    </tr>
+                                    <% } %>
+                                    <% } %>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+          </div>
+
+          <!--   *****************Edit Category Modal******************        -->
+          <div class="modal fade" id="updateCategory" role="dialog">
+              <div class="modal-dialog modal-lg">
+                  <div class="modal-content text-left">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Update Category</h4>
+                      </div>
+                      <div class="modal-body">
+                          <form method="post" action="/categories/savecategory" name="updatecategory" id="updateCategoryForm">
+                              <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="form-group">
+                                          <label>name</label>
+                                          <input type="hidden" name="id">
+                                          <input type="text" class="form-control border-input" name="name">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="text-center">
+                                  <button type="submit" class="btn btn-primary btn-round">Update</button>
+                              </div>
+                              <div class="clearfix"></div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <% include partials/footer.ejs %>
+      </div>
+    </div>
+  </div>
+  <% include partials/scripts.ejs %>
+  <script>
+  $(function() {
+    
+    $("form[name='saveCategory']").validate({
+      rules: {
+        name: "required"
+
+      },
+      
+      messages: {
+        name: "Please enter Category name"
+      },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+  });
+  $(function() {
+    
+    $("form[name='updatecategory']").validate({
+      rules: {
+        name: "required"
+
+      },
+      
+      messages: {
+        name: "Please enter Category name"
+      },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+  });
+  function updateCategoryModal(id, name){
+   
+    let form = document.forms['updateCategoryForm'];
+    form.elements["id"].value = id;
+    form.elements["name"].value = name;
+  
+  };
+  </script>
+</body>
+
+</html>

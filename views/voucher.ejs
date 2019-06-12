@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+  <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+        <div class="content">
+            <% if (errorMsg) { %>
+              <div class="alert alert-danger"><%= errorMsg %></div>
+          <% } %>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">Add New Voucher</h5>
+                </div>
+                <div class="card-body">
+                  <form action="/vouchers/savevoucher/" method="post" name="saveVoucher">
+                    <div class="row">
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                            <label>Text</label>
+                            <input type="text" name="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                              <label>Percentage</label>
+                              <input class="form-control" type="number" name="percentage" id="example-number-input" min="1" max="100">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                  <label>Start At</label>
+                                  <input type="date" class="form-control border-input" name="startAt" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                  <label>Expire At</label>
+                                  <input type="date" class="form-control border-input" name="expireAt" required>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="row">
+                        <div class="update ml-auto mr-auto">
+                          <button type="submit" class="btn btn-primary btn-round">Add Voucher</button>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h4 class="card-title">Voucher Table</h4>
+                      </div>
+
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table">
+                                  <thead class=" text-primary">
+                                    <th>ID</th>
+                                    <th>Text</th>
+                                    <th>Percentage</th>
+                                    <th>Start At</th>
+                                    <th>Expire At</th>
+                                    <th>Created At</th>
+                                    <th>Updated At</th>
+                                    <th></th>
+                                    <th></th>
+                                  </thead>
+                                  <tbody>
+                                  <% if (vouchers) { %>
+                                  <% for (var i =0; i<vouchers.length;i++ ) { %>
+                                    <tr>
+                                      <td><%=vouchers[i].id%></td>
+                                      <td><%=vouchers[i].text%></td>
+                                      <td><%=vouchers[i].percentage%> %</td>
+                                      <td><%=vouchers[i].startAt%></td>
+                                      <td><%=vouchers[i].expireAt%></td>
+                                      <td><%=vouchers[i].createdAt%></td>
+                                      <td><%=vouchers[i].updatedAt%></td>
+                                      <td>
+                                          <a data-toggle="modal" data-target="#updateVoucher" onclick="updateVoucherModal(`<%=vouchers[i].id%>`,`<%=vouchers[i].text%>`,`<%=vouchers[i].percentage%>`,`<%=vouchers[i].startAt%>`,`<%=vouchers[i].expireAt%>`)" ><button class="btn btn-primary btn-round">Update</button></a>
+                                      </td>
+                                      <td>
+                                        <form action="/vouchers/removevoucher/" method="post" name="removevoucher">
+                                          <input type="hidden"  name="id" value="<%=vouchers[i].id%>">
+                                          <button type="submit" class="btn btn-danger">Remove</button>
+                                        </form>
+                                      </td>
+                                    </tr>
+                                    <% } %>
+                                    <% } %>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+          </div>
+
+          <!--   *****************Edit Voucher Modal******************        -->
+          <div class="modal fade" id="updateVoucher" role="dialog">
+              <div class="modal-dialog modal-lg">
+                  <div class="modal-content text-left">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Update Voucher</h4>
+                      </div>
+                      <div class="modal-body">
+                          <form method="post" action="/vouchers/savevoucher" name="updateVoucher" id="updateVoucherForm">
+                            <div class="row">
+                                    <div class="col-md-6 pr-1">
+                                        <div class="form-group">
+                                        <label>Text</label>
+                                        <input type="hidden" name="id">
+                                        <input type="text" name="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pr-1">
+                                        <div class="form-group">
+                                          <label>Percentage</label>
+                                          <input class="form-control" type="number" name="percentage" id="example-number-input" min="1" max="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                        <div class="col-md-6 pr-1">
+                                            <div class="form-group">
+                                              <label>Start At</label>
+                                              <input type="date" class="form-control border-input" name="startAt" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 pr-1">
+                                            <div class="form-group">
+                                              <label>Expire At</label>
+                                              <input type="date" class="form-control border-input" name="expireAt" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                              <div class="text-center">
+                                  <button type="submit" class="btn btn-primary btn-round">Update</button>
+                              </div>
+                              <div class="clearfix"></div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <% include partials/footer.ejs %>
+      </div>
+    </div>
+  </div>
+  <% include partials/scripts.ejs %>
+
+  <script>
+  $(function() {
+    
+    $("form[name='saveVoucher']").validate({
+      rules: {
+        text: "required",
+        percentage:"required"
+
+      },
+      
+      messages: {
+        text: "Please enter Voucher text",
+        percentage:"Please enter Voucher percentage"
+      },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+  });
+  $(function() {
+    
+    $("form[name='updateVoucher']").validate({
+        rules: {
+            text: "required",
+            percentage:"required"
+    
+          },
+          
+          messages: {
+            text: "Please enter Voucher text",
+            percentage:"Please enter Voucher percentage"
+          },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+  });
+  function updateVoucherModal(id, text, percentage, startAt, expireAt){
+   
+    let form = document.forms['updateVoucherForm'];
+    form.elements["id"].value = id;
+    form.elements["text"].value = text;
+    form.elements["percentage"].value = percentage;
+    form.elements["startAt"].value = formateddate(startAt);
+    form.elements["expireAt"].value = formateddate(expireAt);
+  
+  };
+  function formateddate(date){
+    var day = date.split(" ")[2]
+    var month;
+    var year = date.split(" ")[3];
+    if(date.split(" ")[1] == "Jan"){
+        month = "01";
+    }else if(date.split(" ")[1] == "Feb"){
+        month = "02";
+    }else if(date.split(" ")[1] == "Mar"){
+        month = "03";
+    }else if(date.split(" ")[1] == "Apr"){
+        month = "04";
+    }else if(date.split(" ")[1] == "May"){
+        month = "05";
+    }else if(date.split(" ")[1] == "Jun"){
+        month = "06";
+    }else if(date.split(" ")[1] == "Jul"){
+        month = "07";
+    }else if(date.split(" ")[1] == "Aug"){
+        month = "08";
+    }else if(date.split(" ")[1] == "Sep"){
+        month = "09";
+    }else if(date.split(" ")[1] == "Oct"){
+        month = "10";
+    }else if(date.split(" ")[1] == "Nov"){
+        month = "11";
+    }else if(date.split(" ")[1] == "Dec"){
+        month = "12";
+    }
+    date = year + "-" + month + "-" + day;
+    return date;
+  }
+  </script>
+</body>
+
+</html>

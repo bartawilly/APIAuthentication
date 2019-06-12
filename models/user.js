@@ -14,7 +14,16 @@ const userSchema=new Schema({
     password:{
         type:String,
         required:true
+    },
+    firstName:{
+        type:String,
+        required:true
+    },
+    lastName:{
+        type:String,
+        required:true
     }
+
 });
 
 userSchema.pre('save', async function (next) {
@@ -22,8 +31,6 @@ userSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(this.password, salt);
     this.password = passwordHash;
-    const groupName=  await Group.findOne({name: 'users'});
-    groupName.members.push(this._id);
     next();
    } catch (error){
     next(error);
@@ -43,17 +50,47 @@ userSchema.methods.isValidPassword = async function (newPassword) {
 userSchema.methods.addUserToGroup = async function (userId, group) {
     try{
         const groupName=  await Group.findOne({name: group});
-        groupName.members.push(userId);
-        await groupName.save();
+        if(groupName){
+            if(groupName.members.indexOf(userId) == -1){
+                groupName.members.push(userId);
+                await groupName.save();
+                return true;
+            }
+        }
+        return false;
        } catch (error){
         throw new Error(error);
        }
 }
-userSchema.methods.removeUserFromGroup = async function (userId) {
+userSchema.methods.removeUserFromGroup = async function (userId, groupName) {
     try{
-        const groupName=  await getUserGroup(userId);
-        groupName.members.pull(userId);
-        await groupName.save();
+        const foundGroup=  await Group.findOne({name: groupName});
+        const foundUser=  await User.findOne({_id: userId});
+        if(foundGroup && foundUser){
+            
+            foundGroup.members.pull(userId);
+            await foundGroup.save();
+            return true;
+        }
+        return false;
+
+       } catch (error){
+        throw new Error(error);
+       }
+}
+userSchema.methods.isAdmin = async function (userId) {
+    try{
+        const foundGroup=  await Group.findOne({name: 'admins'});
+        const foundUser=  await User.findOne({_id: userId});
+        if(foundGroup && foundUser){
+
+            if(foundGroup.members.indexOf(userId)!=-1){
+
+                return true;
+            }
+             
+        }
+        return false;
 
        } catch (error){
         throw new Error(error);
@@ -61,26 +98,24 @@ userSchema.methods.removeUserFromGroup = async function (userId) {
 }
 userSchema.methods.getUserGroup = async function (userId) {
     try{
-        let groupName;
+        
         let groups = await Group.find({});
         if(groups && groups.length>0){
-            let group = groups.find((g)=>{
-                return g.members.indexOf(userId)!=-1
-            });
-            if(group) {
-            groupName = group.name;
+            let userGroups=[];
+           groups.forEach((g)=>{
+            if(g.members.indexOf(userId) != -1){
+                userGroups.push(g.name);
             }
+           });
+           return userGroups;
         }
-        
-
-        return groupName;
     
     }catch(error){
         throw new Error(error);
     }
-    
        
 }
+
 // Create Model
 
 const User = mongoose.model('user', userSchema)

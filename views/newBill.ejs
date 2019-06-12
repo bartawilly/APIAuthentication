@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+  <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+        <div class="content">
+            <% if (errorMsg) { %>
+              <div class="alert alert-danger"><%= errorMsg %></div>
+          <% } %>
+
+
+          <div class="container">
+              <form action="/bills/previewbill/" method="post" name="previewBill">
+              <div class="row">
+                  <div class="update ml-auto mr-auto">
+                    <button type="submit" class="btn btn-primary btn-round">Perview Bill</button>
+                  </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-md-12">
+                    
+                  <table class="table table-bordered table-hover" id="tab_logic">
+                    <thead>
+                      <tr>
+                        <th class="text-center"> # </th>
+                        <th class="text-center"> Item Code </th>
+                        <th class="text-center"> Qty </th>
+                        <th class="text-center"> Price </th>
+                        <th class="text-center"> Total </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr id='addr0'>
+                        <td>1</td>
+                        
+                        <td>
+                        <input type="hidden" id="itemId0" name='itemId[]' class="itemId"/>
+                        <input type="number" id="itemCode0" onfocusout="checkItemCodeAndPrice(this.id)" name='itemCode[]' placeholder='Enter Item Code' class="form-control itemCode" step="0" min="0" required/>
+                        <span class="error" id="itemCodeError0" aria-live="polite"></span>
+                        </td>
+                        <td><input type="number"  name='ItemQuantity[]' placeholder='Enter Qty' class="form-control quantity" step="0" min="0" required/></td>
+                        <td><input type="number" id="itemPrice0" name='itemFinalPrice[]'   placeholder='0.00' class="form-control price"  readonly/></td>
+                        <td><input type="number" name='itemFinalTotalPrice[]' placeholder='0.00' class="form-control total" readonly/></td>
+                      </tr>
+                      <tr id='addr1'></tr>
+                     
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th class="text-center">Sub Total</th>
+                            <th class="text-center">Tax</th>
+                            <th class="text-center">Tax Amount</th>
+                            <th class="text-center">Grand Total</th>
+                          
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="text-center"><input type="number" name='totalAmount' placeholder='0.00' class="form-control" id="sub_total" readonly/></td>
+                        <td class="text-center">
+                          <div class="input-group mb-2 mb-sm-0">
+                            <input type="number" name="taxpercentage" class="form-control" id="tax" placeholder="0">
+                            <div class="input-group-addon">%</div>
+                          </div>
+                        </td>
+                        <td class="text-center"><input type="number" name='taxAmount' id="tax_amount" placeholder='0.00' class="form-control" readonly/></td>
+                        <td class="text-center"><input type="number" name='finalTotalAmount' id="total_amount" placeholder='0.00' class="form-control" readonly/></td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th class="text-center">Customer Mobile</th>
+                        <th class="text-center">Payment Method</th>
+                        <th class="text-center">Voucher Text</th>
+                        
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="text-center">
+                        <input type="text" name="customerMobile" onfocusout="checkCustomerMobile(this.id)" id="customerMobile" class="form-control" required/>
+                        <input type="hidden" name="customerId" id="customerId"/>
+                        <span class="error" id="customerMobileError" aria-live="polite"></span>
+                        </td>
+                        <td class="text-center">
+                            <select class="form-control border-input" name="paymentId" required>
+                                <% if (payments) { %>
+                                <% for (var i =0; i<payments.length;i++) { %>
+                                <option value="<%=payments[i].id%>"><%=payments[i].type%></option>
+                                <% } %>
+                                <% } %>
+                            </select>
+                        </td>
+                        <td class="text-center">
+                            <input type="text" name="voucherText" onfocusout="checkVoucherText(this.id)" id="voucherText" class="form-control"/>
+                            <input type="hidden" name="voucherId" id="voucherId"/>
+                            <span class="error" id="voucherTextError" aria-live="polite"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                  </table>
+               
+                </div>
+              </div>
+
+              </form>
+              <div class="row clearfix">
+                <div class="col-md-12">
+                  <button id="add_row" class="btn btn-default pull-left">Add Row</button>
+                  <button id='delete_row' class="pull-right btn btn-default">Delete Row</button>
+                </div>
+              </div>
+            </div>
+
+        <% include partials/footer.ejs %>
+      </div>
+    </div>
+  </div>
+  <% include partials/scripts.ejs %>
+
+
+  <script>
+  
+  $(document).ready(function(){
+    var i=1;
+    $("#add_row").click(function(){b=i-1;
+      	$('#addr'+i).html($('#addr'+b).html()).find('td:first-child').html(i+1);
+        $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
+        $('#addr'+i).find('td').find('.price').attr('id',"itemPrice"+i );
+        $('#addr'+i).find('td').find('.itemId').attr('id',"itemId"+i );
+        $('#addr'+i).find('td').find('.itemCode').attr('id',"itemCode"+i );
+        $('#addr'+i).find('td').find('.error').attr('id',"itemCodeError"+i );
+        i++; 
+        
+  	});
+    $("#delete_row").click(function(){
+    	if(i>1){
+		$("#addr"+(i-1)).html('');
+		i--;
+    }
+    calc();
+ 
+	});
+	
+	$('#tab_logic tbody').on('keyup change',function(){
+    
+    calc();
+    
+  });
+  
+  $('#tax').on('keyup change',function(){
+		calc_total();
+	});
+	
+
+});
+
+function calc()
+{
+	$('#tab_logic tbody tr').each(function(i, element) {
+		var html = $(this).html();
+		if(html!='')
+		{
+			var quantity = $(this).find('.quantity').val();
+			var price = $(this).find('.price').val();
+			$(this).find('.total').val(quantity*price);
+      calc_total();
+		}
+    });
+}
+var voucherDiscountPercentage;
+function calc_total()
+{
+	total=0;
+	$('.total').each(function() {
+        total += parseInt($(this).val());
+    });
+	$('#sub_total').val(total.toFixed(2));
+	tax_sum=total/100*$('#tax').val();
+  $('#tax_amount').val(tax_sum.toFixed(2));
+  if(voucherDiscountPercentage){
+    let finalTotal = ((tax_sum+total)/100)*voucherDiscountPercentage;
+    $('#total_amount').val((finalTotal).toFixed(2));
+  }
+  else{
+    $('#total_amount').val((tax_sum+total).toFixed(2));
+  }
+	
+}
+
+const items = <%- JSON.stringify(items) %>;
+
+function checkItemCodeAndPrice(id){
+
+  var itemId;
+  var itemPrice;
+  let codeInput = document.getElementById(id);
+  let idInput = document.getElementById("itemId" + id[id.length -1]);
+  let priceInput = document.getElementById("itemPrice" + id[id.length -1]);
+  let itemCodeError = document.getElementById("itemCodeError" + id[id.length -1]);
+    if(items.find(item => item.code == codeInput.value)){
+      itemId=items.find(item => item.code == codeInput.value).id;
+      itemPrice=items.find(item => item.code == codeInput.value).finalPrice;
+      idInput.value=itemId;
+      priceInput.value=itemPrice;
+      itemCodeError.className = "error";
+      itemCodeError.innerHTML = "";
+      codeInput.setCustomValidity("");
+    }
+    else{
+      codeInput.setCustomValidity("Enter a valid code!");
+      itemCodeError.innerHTML = "Enter a valid code!";
+      itemCodeError.className = "error active";
+      idInput.value=0;
+      priceInput.value=0;
+    }
+    
+}
+const customers = <%- JSON.stringify(customers) %>;
+function checkCustomerMobile(id){
+  var customerId;
+  customerMobileInput = document.getElementById(id);
+  customerIdInput = document.getElementById("customerId");
+  customerMobileError = document.getElementById("customerMobileError");
+  if(customers.find(customer => customer.mobile == customerMobileInput.value)){
+    customerId = customers.find(customer => customer.mobile == customerMobileInput.value).id;
+    customerIdInput.value = customerId;
+    customerMobileError.className = "error";
+    customerMobileError.innerHTML = "";
+    customerMobileInput.setCustomValidity("");
+  }
+  else{
+    customerMobileError.className = "error active";
+    customerMobileError.innerHTML = "Enter a correct customer Mobile!";
+    customerMobileInput.setCustomValidity("Enter a correct customer Mobile!");
+    customerIdInput.value = 0;
+  }
+}
+const vouchers =  <%- JSON.stringify(vouchers) %>;
+
+function checkVoucherText (id){
+  var voucherId;
+  var voucherStartAt;
+  var voucherExpireAt;
+  let voucherTextInput = document.getElementById(id);
+  let voucherIdInput = document.getElementById("voucherId");
+  let voucherTextError = document.getElementById("voucherTextError");
+  if(voucherTextInput.value){
+    if(vouchers.find(voucher => voucher.text == voucherTextInput.value )){
+      let currentDate = new Date();
+      voucherExpireAt = new Date(vouchers.find(voucher => voucher.text == voucherTextInput.value).expireAt);
+      voucherStartAt = new Date(vouchers.find(voucher => voucher.text == voucherTextInput.value).startAt);
+      if(voucherExpireAt >= currentDate){
+        if(voucherStartAt <= currentDate){
+          voucherId = vouchers.find(voucher => voucher.text == voucherTextInput.value).id;
+          voucherDiscountPercentage = vouchers.find(voucher => voucher.text == voucherTextInput.value).percentage;
+          voucherIdInput.value = voucherId;
+          voucherTextError.className = "error";
+          voucherTextError.innerHTML = "";
+          voucherTextInput.setCustomValidity("");
+        }
+        else{
+          voucherDiscountPercentage = null;
+          voucherTextError.className = "error active";
+          voucherTextError.innerHTML = "This code isn't started yet!";
+          voucherTextInput.setCustomValidity("This code isn't started yet!");
+          voucherIdInput.value = 0;
+        }
+        
+      }
+      else{
+        voucherDiscountPercentage = null;
+        voucherTextError.className = "error active";
+        voucherTextError.innerHTML = "This code has been expired!";
+        voucherTextInput.setCustomValidity("This code has been expired!");
+        voucherIdInput.value = 0;
+      }
+      
+    }
+    else{
+      voucherDiscountPercentage = null;
+      voucherTextError.className = "error active";
+      voucherTextError.innerHTML = "please enter a valid voucher!";
+      voucherTextInput.setCustomValidity("please enter a valid voucher!");
+      voucherIdInput.value = 0;
+    }
+  }
+  else{
+    voucherDiscountPercentage = null;
+    voucherTextError.className = "error";
+    voucherTextError.innerHTML = "";
+    voucherTextInput.setCustomValidity("");
+    voucherIdInput.value = 0;
+  }
+  calc_total();
+}
+
+  </script>
+
+</body>
+
+</html>

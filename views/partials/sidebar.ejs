@@ -1,0 +1,85 @@
+<div class="sidebar" data-color="white" data-active-color="danger">
+    <!--
+      Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
+  -->
+    <div class="logo">
+      <a href="/" class="simple-text logo-mini">
+        <div class="logo-image-small">
+          <img src="/img/logo-small.png">
+        </div>
+      </a>
+      <a href="/" class="simple-text logo-normal">
+        Retail System
+        <!-- <div class="logo-image-big">
+          <img src="/img/logo-big.png">
+        </div> -->
+      </a>
+    </div>
+    <div class="sidebar-wrapper">
+      <ul class="nav">
+      
+        <li <% if (active === 'dashboard') { %> class="active" <% } %> >
+          <a href="/panel/dashboard">
+            <i class="nc-icon nc-bank"></i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+      
+
+        <li <% if (active === 'groups') { %> class="active" <% } %> >
+          <a href="/groups/getgroups">
+            <i class="nc-icon nc-single-02"></i>
+            <p>Groups</p>
+          </a>
+        </li>
+        <li <% if (active === 'providers') { %> class="active" <% } %> >
+          <a href="/providers/getproviders">
+            <i class="nc-icon nc-shop"></i>
+            <p>Providers</p>
+          </a>
+        </li>
+        <li <% if (active === 'categories') { %> class="active" <% } %> >
+          <a href="/categories/getcategories">
+            <i class="nc-icon nc-layout-11"></i>
+            <p>Categories</p>
+          </a>
+        </li>
+        <li <% if (active === 'customers') { %> class="active" <% } %> >
+          <a href="/customers/getcustomers">
+            <i class="nc-icon nc-satisfied"></i>
+            <p>Customers</p>
+          </a>
+        </li>
+        <li <% if (active === 'expenses') { %> class="active" <% } %> >
+          <a href="/expenses/getexpenses">
+            <i class="nc-icon nc-chart-pie-36"></i>
+            <p>Expenses</p>
+          </a>
+        </li>
+        <li <% if (active === 'vouchers') { %> class="active" <% } %> >
+          <a href="/vouchers/getvouchers">
+            <i class="nc-icon nc-scissors"></i>
+            <p>Vouchers</p>
+          </a>
+        </li>
+        <li <% if (active === 'items') { %> class="active" <% } %> >
+          <a href="/items/getitems">
+            <i class="nc-icon nc-ruler-pencil"></i>
+            <p>Items</p>
+          </a>
+        </li>
+        <li <% if (active === 'payments') { %> class="active" <% } %> >
+          <a href="/payments/getpayments">
+            <i class="nc-icon nc-tag-content"></i>
+            <p>Payments</p>
+          </a>
+        </li>
+        <li <% if (active === 'newBill') { %> class="active" <% } %> >
+          <a href="/bills/newbill">
+            <i class="nc-icon nc-map-big"></i>
+            <p>New Bill</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>

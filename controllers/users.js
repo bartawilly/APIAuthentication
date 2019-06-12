@@ -1,7 +1,9 @@
 const JWT = require('jsonwebtoken');
 const User = require('../models/user');
+const userServices = require('../services/user');
 const Group = require('../models/group');
 const {JWT_SECRET}= require('../config');
+const authorization= require('../helpers/authorization');
 signToken = user =>{
     return JWT.sign({
         iss: 'meshyat',
@@ -16,19 +18,24 @@ module.exports={
         
         const email = req.value.body.email;
         const password = req.value.body.password;
+        const firstName = req.value.body.firstname;
+        const lastName = req.value.body.lastname;
         const foundUser = await User.findOne({email: email});
         if(foundUser){
            return res.status(403).send({error:'Email already exist'});
         }
         const newUser = new User({
             email:email,
-            password:password
+            password:password,
+            firstName:firstName,
+            lastName:lastName
         })
        newUser.save();
        defaultGroup = 'users';
        newUser.addUserToGroup(newUser._id,defaultGroup);
         const token = signToken(newUser);
-      res.status(200).json({token: token});
+        res.cookie('jwt',token);
+        res.redirect('/panel/dashboard');
     },
     
     signIn: async (req,res, next) =>{
@@ -39,38 +46,116 @@ module.exports={
             }
         const user = new User();
         var userGroup = await user.getUserGroup(req.user._id);
-        
-        if(userGroup==='admins'){
-            res.status(200).send({success:"you are admin", token:token});                }
+        res.cookie('jwt',token);
+
+        if(userGroup.indexOf('admins')!=-1){
+            res.redirect('/panel/dashboard');                
+        }
         else{
-            res.status(200).send({success:"you are normal user", token:token}); 
+            res.redirect('/panel/dashboard');   
         }      
      
+    },
+    signOut: async (req,res, next) =>{
+
+        const foundUser = User.findOne({id: req.user._id});
+        if(!foundUser){
+            res.status(403).send({error:'User is not exist'});
+            }
+        res.clearCookie('jwt');
+        res.redirect('/users/signin');  
+     
+    },
+    signInGet: async (req,res, next) =>{
+        if(authorization.cookieTokenExtractor(req)){
+            res.redirect('/panel/dashboard'); 
+        }
+        else{
+            var message = req.flash('message')[0];
+            res.render('signin-signup',{message: message});
+        }
+        
     },
 
     secret: async (req,res, next) =>{
 
-        console.log('I managed to get here');
+        res.status(200).send({secret:'I managed to get here'});
         
     },
-    addUserToGroup: async (req,res, next)=>{
-        
-        
-        const name = req.value.body.name;
-        const email = req.value.body.email;
-        const foundUser = await User.findOne({email: email});
-        const foundGroup = await Group.findOne({name: name});
-        if(!foundUser){
-           return res.status(403).send({error:'User is not exist'});
-        }
+    editUser: async (req, res, next) => {
+        var user =  await User.findOne({_id: req.user._id});
+        var updateUserError = req.flash('updateUserError')[0];
+        var updateUserPasswordError = req.flash('updateUserPasswordError')[0]; 
+        res.render('user',{user: user,updateUserError: updateUserError,updateUserPasswordError: updateUserPasswordError, active:'none'});
+    },
+    updateUser: async (req, res, next) => {
 
-        if(!foundGroup){
-            return res.status(403).send({error:'Group is not exist'});
-         }
-        if(await foundUser.getUserGroup(foundUser._id)){
-            await User.removeUserFromGroup(foundUser._id);
+        const foundUser = await User.findOne({_id: req.user._id});
+        if(!foundUser){
+            res.status(403).send({error:'User is not exist'});
+            }
+
+        foundUser.firstName = req.value.body.firstname;
+        foundUser.lastName = req.value.body.lastname;
+        foundUser.email = req.value.body.email;
+        if(await userServices.updateUser(foundUser)){
+            res.redirect('/users/edituser/');
+
         }
-        await foundUser.addUserToGroup(foundUser.id,foundGroup.name);
-        res.status(200).send({success:"User has been added! to the group!"});
+        else{
+
+            req.flash('updateUserError','Error updating your user.');
+            res.redirect('/users/edituser/');
+        }
+        
+    },
+    updateUserPassword: async (req, res, next) => {
+
+        const foundUser = await User.findOne({_id: req.user._id});
+        if(!foundUser){
+            res.status(403).send({error:'User is not exist'});
+            }
+        foundUser.password = req.value.body.password;
+        if(await userServices.updateUserPassword(foundUser)){
+            res.redirect('/users/edituser/');
+
+        }
+        else{
+
+            req.flash('updateUserPasswordError','Error updating your user password.');
+            res.redirect('/users/edituser/');
+        }
+        
+    },
+    makeAdmin: async (req, res, next) => {
+        const userID = req.value.body.id;
+        if(await userServices.makeAdmin(userID)){
+            res.redirect('/groups/getgroups/');
+        }
+        else{
+            req.flash('errorMsg','Error adding your user');
+            res.redirect('/groups/getgroups/');
+        }
+    },
+    removeAdmin: async (req, res, next) => {
+        const userID = req.value.body.id;
+        if(await userServices.removeAdmin(userID)){
+            res.redirect('/groups/getgroups/');
+        }
+        else{
+            req.flash('errorMsg','Error removing your user');
+            res.redirect('/groups/getgroups/');
+        }
+    },
+    removeUser: async (req, res, next) =>{
+        const userID = req.value.body.id;
+        if(await userServices.removeUser(userID)){
+            res.redirect('/groups/getgroups/');
+        }
+        else{
+            req.flash('errorMsg','Error removing your user');
+            res.redirect('/groups/getgroups/');
+        }
     }
+
 };

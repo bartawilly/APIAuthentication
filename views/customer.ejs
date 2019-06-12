@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+  <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+        <div class="content">
+            <% if (errorMsg) { %>
+              <div class="alert alert-danger"><%= errorMsg %></div>
+          <% } %>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">Add New Customer</h5>
+                </div>
+                <div class="card-body">
+
+                  <form action="/customers/savecustomer/" method="post" name="saveCustomer">
+                    <div class="row">
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                              <label>Mobile</label>
+                              <input type="text" name="mobile" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="update ml-auto mr-auto">
+                          <button type="submit" class="btn btn-primary btn-round">Add Customer</button>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h4 class="card-title">Customers Table</h4>
+                      </div>
+
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table">
+                                  <thead class=" text-primary">
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Mobile</th>
+                                    <th>createdAt</th>
+                                    <th>updatedAt</th>
+                                    <th>createdBy</th>
+                                    <th>updatedBy</th>
+                                    <th></th>
+                                    <th></th>
+                                  </thead>
+                                  <tbody>
+                                  <% if (customers) { %>
+                                  <% for (var i =0; i<customers.length;i++ ) { %>
+                                    <tr>
+                                      <td><%=customers[i].id%></td>
+                                      <td><%=customers[i].name%></td>
+                                      <td><%=customers[i].mobile%></td>
+                                      <td><%=customers[i].createdAt%></td>
+                                      <td><%=customers[i].updatedAt%></td>
+                                      <td><%=creators[i]%></td>
+                                      <td><%=updaters[i]%></td>
+                                      <td>
+                                          <a data-toggle="modal" data-target="#updateCustomer" onclick="updateCustomerModal(`<%=customers[i].id%>`,`<%=customers[i].name%>`,`<%=customers[i].mobile%>`)" ><button class="btn btn-primary btn-round">Update</button></a>
+                                      </td>
+                                      <td>
+                                        <form action="/customers/removecustomer/" method="post" name="removecustomer">
+                                          <input type="hidden"  name="id" value="<%=customers[i].id%>">
+                                          <button type="submit" class="btn btn-danger">Remove</button>
+                                        </form>
+                                      </td>
+                                    </tr>
+                                    <% } %>
+                                    <% } %>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+          </div>
+
+          <!--   *****************Edit Customer Modal******************        -->
+          <div class="modal fade" id="updateCustomer" role="dialog">
+              <div class="modal-dialog modal-lg">
+                  <div class="modal-content text-left">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Update Customer</h4>
+                      </div>
+                      <div class="modal-body">
+                          <form method="post" action="/customers/savecustomer" name="updateCustomer" id="updateCustomerForm">
+                              <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>name</label>
+                                            <input type="hidden" name="id">
+                                            <input type="text" class="form-control border-input" name="name">
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>mobile</label>
+                                            <input type="text" class="form-control border-input" name="mobile">
+                                        </div>
+                                    </div>
+                              </div>
+                              <div class="text-center">
+                                  <button type="submit" class="btn btn-primary btn-round">Update</button>
+                              </div>
+                              <div class="clearfix"></div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <% include partials/footer.ejs %>
+      </div>
+    </div>
+  </div>
+  <% include partials/scripts.ejs %>
+  <script>
+  $(function() {
+    
+    $("form[name='saveCustomer']").validate({
+      rules: {
+        name: "required",
+        mobile:"required"
+
+      },
+      
+      messages: {
+        name: "Please enter Customer name",
+        mobile:"Please enter Customer mobile"
+      },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+  });
+  $(function() {
+    
+    $("form[name='updateCustomer']").validate({
+        rules: {
+            name: "required",
+            mobile:"required"
+
+            },
+            
+            messages: {
+            name: "Please enter Customer name",
+            mobile:"Please enter Customer mobile"
+        },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+  });
+  function updateCustomerModal(id, name, mobile){
+   
+    let form = document.forms['updateCustomerForm'];
+    form.elements["id"].value = id;
+    form.elements["name"].value = name;
+    form.elements["mobile"].value = mobile;
+  
+  };
+  </script>
+</body>
+
+</html>
