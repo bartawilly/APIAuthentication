@@ -15,6 +15,18 @@ const Customers = mysqlBackbone.Collection.extend({ model: Customer, connection:
 const customers = new Customers();
 
 module.exports={
+    getCustomerByName: async function(name){
+        var result;
+        let query = "name=" +"'"+ name + "'";
+        await  customers.fetch( {where: query}).then(function(rows) {
+            if (rows){
+                result = rows;
+                return result;
+            }
+            return null;
+        });
+        return result;
+    },
     getCustomer: async function (id=null){
         var result;
         if(id){
@@ -41,6 +53,19 @@ module.exports={
     },
     saveCustomer: async function (cus, userId, id=null){
         
+        var guest;
+        if(cus.name == "guest"){
+            await  customers.fetch( {where: "name= 'guest'"}).then(function(rows) {
+                if (rows){
+                    guest = rows;
+                    return guest;
+                }
+                return null;
+            });
+            if(guest){
+                return false;
+            }
+        }
         
         if(id){
             try{
@@ -83,7 +108,7 @@ module.exports={
     getCustomerCustom: async function (id=null){
         var result;
         if(id){
-            await  customers.fetch( {fields: ['id','name', 'mobile'], where: "id=" +id}).then(function(rows) {
+            await  customers.fetch( {fields: ['id', 'mobile'], where: "id=" +id}).then(function(rows) {
                 if (rows){
                     result = rows;
                     return rows;
@@ -94,7 +119,7 @@ module.exports={
         }
         else{
             
-            await customers.fetch({fields: ['id','name', 'mobile']}).then(function(rows) {
+            await customers.fetch({fields: ['id', 'mobile']}).then(function(rows) {
                 if (rows){
                     result = rows;
                     return rows;

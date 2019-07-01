@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+  <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+        <div class="content">
+            <% if (errorMsg) { %>
+              <div class="alert alert-danger"><%= errorMsg %></div>
+          <% } %>
+          <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                    <h5 class="card-title">Get report between dates</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/reports/report/" method="get" name="getReport">
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label>Start At</label>
+                                        <input type="date" class="form-control border-input" name="startAt" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label>End At</label>
+                                        <input type="date" class="form-control border-input" name="endAt" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="update ml-auto mr-auto">
+                                <button type="submit" class="btn btn-primary btn-round">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="row">
+
+                <div class="col-md-4">
+                  <div class="card card-stats">
+                    <div class="card-body ">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-money-coins text-success"></i>
+                          </div>
+                        </div>
+                        <div class="col-md-8">
+                          <div class="numbers">
+                            <p class="card-category">Total Income</p>
+                            <% if (report.totalFinalAmounts) { %>
+                                <p class="card-title"> <%= report.totalFinalAmounts %><p>
+                            <% } else {%>
+                                <p class="card-title"> 0 <p>
+                            <% }%>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer ">
+                      <hr>
+                      <div class="stats">
+                            <i class="fa fa-refresh"></i> Update now
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card card-stats">
+                        <div class="card-body ">
+                        <div class="row">
+                            <div class="col-md-4">
+                            <div class="icon-big text-center icon-warning">
+                                <i class="nc-icon nc-money-coins text-success"></i>
+                            </div>
+                            </div>
+                            <div class="col-md-8">
+                            <div class="numbers">
+                                <p class="card-category">Total Expenses</p>
+                                <% if (report.totalExpenses) { %>
+                                <p class="card-title"> <%= report.totalExpenses %><p>
+                                <% } else {%>
+                                    <p class="card-title"> 0 <p>
+                                <% }%>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="card-footer ">
+                        <hr>
+                        <div class="stats">
+                                <i class="fa fa-refresh"></i> Update now
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="card card-stats">
+                        <div class="card-body ">
+                        <div class="row">
+                            <div class="col-md-4">
+                            <div class="icon-big text-center icon-warning">
+                                <i class="nc-icon nc-money-coins text-success"></i>
+                            </div>
+                            </div>
+                            <div class="col-md-8">
+                            <div class="numbers">
+                                <p class="card-category">Net Revenue</p>
+                                <% if (report.netRevenue) { %>
+                                <p class="card-title"> <%= report.netRevenue %><p>
+                                <% } else {%>
+                                    <p class="card-title"> 0 <p>
+                                <% }%>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="card-footer ">
+                        <hr>
+                        <div class="stats">
+                                <i class="fa fa-refresh"></i> Update now
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+              </div>
+
+
+
+
+    
+        <% include partials/footer.ejs %>
+      </div>
+    </div>
+  </div>
+  <% include partials/scripts.ejs %>
+ 
+</body>
+
+</html>

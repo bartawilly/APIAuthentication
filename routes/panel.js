@@ -8,7 +8,5 @@ const {JWTAdminAuthorization} = require('../helpers/authorization');
 const passport = require('passport');
 
 router.route('/dashboard')
-    .get(passport.authenticate('jwt',{session: false, failureRedirect: '/users/signin'}),
-        panelController.dashboard
-    );
+    .get(passport.authenticate('jwt',{session: false, failureRedirect: '/users/signin'}), panelController.dashboard);
 module.exports = router;

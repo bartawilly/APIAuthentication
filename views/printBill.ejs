@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+    <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+        <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+          
+            <div class="content">
+                <div class="row">
+                        <div class="col-md-12 text-center">
+                                <button type="button" class="btn btn-primary btn-round" onclick="printJS('printBill', 'html')">
+                                        Print Bill
+                                </button>
+                        </div>
+                </div>
+                <div class="row" id="printBill">
+                    <div class="col-md-12">
+                            <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <h1>Mesha, Retail System</h1>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h2>Invoice</h2>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h3 class="pull-right">Order # <%= billId %> </h3>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <strong>Billed To:</strong><br>
+                                                <p><%= customerName %></p>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <strong>Cashier:</strong><br>
+                                                <p><%= cachierName %></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <strong>Payment Method:</strong><br>
+                                                <p><%= paymentType %></p>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <strong>Order Date:</strong><br>
+                                                <p><%= orderedAt %></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title"><strong>Order summary</strong></h3>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-condensed">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td><strong>Item code</strong></td>
+                                                                    <td class="text-center"><strong>Item Name</strong></td>
+                                                                    <td class="text-center"><strong>Price</strong></td>
+                                                                    <td class="text-center"><strong>Quantity</strong></td>
+                                                                    <td class="text-right"><strong>Totals</strong></td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% if (itemCodes) { %>
+                                                                <% for (var i =0; i<itemCodes.length;i++ ) { %>
+                                                                <tr>
+                                                                    <td><%= itemCodes[i] %></td>
+                                                                    <td class="text-center"><%= itemNames[i] %></td>
+                                                                    <td class="text-center"><%= itemPrices[i] %></td>
+                                                                    <td class="text-center"><%= billedItemsQuantity[i] %></td>
+                                                                    <td class="text-right"><%= billedItemsAmount[i] %></td>
+                                                                </tr>
+                                                                <% } %>
+                                                                <% } %>
+                                                                <tr>
+                                                                    <td class="thick-line"></td>
+                                                                    <td class="thick-line"></td>
+                                                                    <td class="thick-line"></td>
+                                                                    <td class="thick-line text-center"><strong>Subtotal</strong></td>
+                                                                    <td class="thick-line text-right"><%= amount %></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="thick-line"></td>
+                                                                    <td class="thick-line"></td>
+                                                                    <td class="thick-line"></td>
+                                                                    <td class="thick-line text-center"><strong>Tax</strong></td>
+                                                                    <td class="thick-line text-right"><%= taxPercentage %> %</td>
+                                                                
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="thick-line"></td>
+                                                                    <td class="thick-line"></td>
+                                                                    <td class="thick-line"></td>
+                                                                    <td class="thick-line text-center"><strong>Tax Amount</strong></td>
+                                                                    <td class="thick-line text-right"><%= taxAmount %></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="no-line"></td>
+                                                                    <td class="no-line"></td>
+                                                                    <td class="no-line"></td>
+                                                                    <td class="no-line text-center"><strong>Voucher</strong></td>
+                                                                    <td class="no-line text-right"><%= voucherText %></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="no-line"></td>
+                                                                    <td class="no-line"></td>
+                                                                    <td class="no-line"></td>
+                                                                    <td class="no-line text-center"><strong> Grand Total</strong></td>
+                                                                    <td class="no-line text-right"><%= finalAmount %></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                </div>
+        </div>
+    </div>
+      <% include partials/scripts.ejs %>
+</body>
+</html>

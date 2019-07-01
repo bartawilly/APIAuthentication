@@ -17,7 +17,6 @@ module.exports = {
     updateUserPassword : async function (user) {
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(user.password, salt);
-        console.log(user.password);
         return  User.findOneAndUpdate({_id: user.id}, {$set:{password:passwordHash}}, (err) => {
             if (err) {
                 return false;

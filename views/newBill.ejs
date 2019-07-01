@@ -21,10 +21,10 @@
 
 
           <div class="container">
-              <form action="/bills/previewbill/" method="post" name="previewBill">
+              <form action="/bills/placeorder/" method="post" name="placeOrder" id="newBillForm">
               <div class="row">
                   <div class="update ml-auto mr-auto">
-                    <button type="submit" class="btn btn-primary btn-round">Perview Bill</button>
+                    <button type="submit" class="btn btn-primary btn-round">Place Order</button>
                   </div>
               </div>
               <div class="row clearfix">
@@ -49,7 +49,9 @@
                         <input type="number" id="itemCode0" onfocusout="checkItemCodeAndPrice(this.id)" name='itemCode[]' placeholder='Enter Item Code' class="form-control itemCode" step="0" min="0" required/>
                         <span class="error" id="itemCodeError0" aria-live="polite"></span>
                         </td>
-                        <td><input type="number"  name='ItemQuantity[]' placeholder='Enter Qty' class="form-control quantity" step="0" min="0" required/></td>
+                        <td>
+                          <input type="number" id="itemQuantity0" name='ItemQuantity[]' onfocusout="checkItemQuantity(this.id)" oninput="checkItemQuantity(this.id)" placeholder='Enter Qty' class="form-control quantity" step="0" min="0" required/>
+                        </td>
                         <td><input type="number" id="itemPrice0" name='itemFinalPrice[]'   placeholder='0.00' class="form-control price"  readonly/></td>
                         <td><input type="number" name='itemFinalTotalPrice[]' placeholder='0.00' class="form-control total" readonly/></td>
                       </tr>
@@ -70,11 +72,11 @@
                         <td class="text-center"><input type="number" name='totalAmount' placeholder='0.00' class="form-control" id="sub_total" readonly/></td>
                         <td class="text-center">
                           <div class="input-group mb-2 mb-sm-0">
-                            <input type="number" name="taxpercentage" class="form-control" id="tax" placeholder="0">
+                            <input type="number" name="taxpercentage" class="form-control" id="tax">
                             <div class="input-group-addon">%</div>
                           </div>
                         </td>
-                        <td class="text-center"><input type="number" name='taxAmount' id="tax_amount" placeholder='0.00' class="form-control" readonly/></td>
+                        <td class="text-center"><input type="number" name='taxAmount' id="tax_amount"  class="form-control" readonly/></td>
                         <td class="text-center"><input type="number" name='finalTotalAmount' id="total_amount" placeholder='0.00' class="form-control" readonly/></td>
                     </tr>
                     <tr>
@@ -87,7 +89,7 @@
                     <tr>
                         <td></td>
                         <td class="text-center">
-                        <input type="text" name="customerMobile" onfocusout="checkCustomerMobile(this.id)" id="customerMobile" class="form-control" required/>
+                        <input type="text" name="customerMobile" onfocusout="checkCustomerMobile(this.id)" id="customerMobile" class="form-control"/>
                         <input type="hidden" name="customerId" id="customerId"/>
                         <span class="error" id="customerMobileError" aria-live="polite"></span>
                         </td>
@@ -138,6 +140,7 @@
         $('#addr'+i).find('td').find('.price').attr('id',"itemPrice"+i );
         $('#addr'+i).find('td').find('.itemId').attr('id',"itemId"+i );
         $('#addr'+i).find('td').find('.itemCode').attr('id',"itemCode"+i );
+        $('#addr'+i).find('td').find('.quantity').attr('id',"quantity"+i );
         $('#addr'+i).find('td').find('.error').attr('id',"itemCodeError"+i );
         i++; 
         
@@ -188,7 +191,7 @@ function calc_total()
 	tax_sum=total/100*$('#tax').val();
   $('#tax_amount').val(tax_sum.toFixed(2));
   if(voucherDiscountPercentage){
-    let finalTotal = ((tax_sum+total)/100)*voucherDiscountPercentage;
+    let finalTotal = ((tax_sum+total)/100)*(100-voucherDiscountPercentage);
     $('#total_amount').val((finalTotal).toFixed(2));
   }
   else{
@@ -225,25 +228,55 @@ function checkItemCodeAndPrice(id){
     }
     
 }
+function checkItemQuantity(id){
+
+  let quantityInput = document.getElementById(id);
+  let itemId = document.getElementById("itemId" + id[id.length -1]);
+  let itemQuantityError = document.getElementById("itemQuantityError" + id[id.length -1]);
+  var orignalQuantity;
+  if(itemId.value > 0){
+    orignalQuantity = items.find(item => item.id == itemId.value).quantity;
+    if(orignalQuantity >= quantityInput.value){
+      quantityInput.setCustomValidity("");
+    }
+    else{
+    quantityInput.setCustomValidity("canot order more than " + orignalQuantity + " in stock" );
+    }
+    
+  }
+  else{
+    quantityInput.setCustomValidity("Confirm item code first");
+  }
+}
 const customers = <%- JSON.stringify(customers) %>;
 function checkCustomerMobile(id){
   var customerId;
   customerMobileInput = document.getElementById(id);
   customerIdInput = document.getElementById("customerId");
   customerMobileError = document.getElementById("customerMobileError");
-  if(customers.find(customer => customer.mobile == customerMobileInput.value)){
+  if(customerMobileInput.value){
+    
+    if(customers.find(customer => customer.mobile == customerMobileInput.value)){
     customerId = customers.find(customer => customer.mobile == customerMobileInput.value).id;
     customerIdInput.value = customerId;
     customerMobileError.className = "error";
     customerMobileError.innerHTML = "";
     customerMobileInput.setCustomValidity("");
-  }
+  } 
   else{
     customerMobileError.className = "error active";
     customerMobileError.innerHTML = "Enter a correct customer Mobile!";
     customerMobileInput.setCustomValidity("Enter a correct customer Mobile!");
     customerIdInput.value = 0;
   }
+  }
+  else{
+    customerMobileError.className = "error";
+    customerMobileError.innerHTML = "";
+    customerMobileInput.setCustomValidity("");
+    customerIdInput.value = 0;
+  }
+  
 }
 const vouchers =  <%- JSON.stringify(vouchers) %>;
 

@@ -97,7 +97,7 @@ module.exports={
     getItemCustom: async function (id=null){
         var result;
         if(id){
-            await  items.fetch( {fields: ['id','code', 'finalPrice'], where: "id=" +id}).then(function(rows) {
+            await  items.fetch( {fields: ['id','code', 'quantity', 'finalPrice'], where: "id=" +id}).then(function(rows) {
                 if (rows){
                     result = rows;
                     return rows;
@@ -108,10 +108,22 @@ module.exports={
         }
         else{
             
-            await items.fetch({fields: ['id','code', 'finalPrice']}).then(function(rows) {
+            await items.fetch({fields: ['id','code', 'quantity', 'finalPrice']}).then(function(rows) {
                 if (rows){
                     result = rows;
                     return rows;
+                }
+                return null;
+            });
+        }
+        return result;
+    },
+    getReorderItems: async function (threshold) {
+        var result;
+        if(threshold){
+            await items.fetch({fields: ['code', 'name', 'cost', 'quantity','providerId'], where:'quantity < '+threshold}).then(function(rows) {
+                if (rows){
+                    result = JSON.parse(JSON.stringify(rows));
                 }
                 return null;
             });

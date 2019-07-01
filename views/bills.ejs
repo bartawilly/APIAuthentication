@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+  <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+        <div class="content">
+            <% if (errorMsg) { %>
+              <div class="alert alert-danger"><%= errorMsg %></div>
+          <% } %>
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                      <div class="card-header">
+                          <h4 class="card-title">Bills Table</h4>
+                      </div>
+
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table">
+                                  <thead class=" text-primary">
+                                    <th>Bill ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Payment Type</th>
+                                    <th>Applied Voucher</th>
+                                    <th>Gross Amount</th>
+                                    <th>Tax</th>
+                                    <th>Tax Amount</th>
+                                    <th>Net Amount</th>
+                                    <th>createdAt</th>
+                                    <th>updatedAt</th>
+                                    <th>createdBy</th>
+                                    <th>updatedBy</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                  </thead>
+                                  <tbody>
+                                  <% if (bills) { %>
+                                  <% for (var i =0; i<bills.length;i++ ) { %>
+                                    <tr>
+                                        <td><%=bills[i].id%></td>
+                                        <td><%=customers[i]%></td>
+                                        <td><%=payments[i]%></td>
+                                        <td><%=vouchers[i]%></td>
+                                        <td><%=bills[i].amount%></td>
+                                        <td><%=bills[i].tax%></td>
+                                        <td><%=bills[i].taxAmount%></td>
+                                        <td><%=bills[i].finalAmount%></td>
+                                        <td><%=bills[i].createdAt%></td>
+                                        <td><%=bills[i].updatedAt%></td>
+                                        <td><%=creators[i]%></td>
+                                        <td><%=updaters[i]%></td>
+                                        <td>
+                                            <form action="/bills/printbill/" method="get" name="printbill">
+                                            <input type="hidden"  name="billId" value="<%=bills[i].id%>">
+                                            <button type="submit" class="btn btn-primary btn-round">Print</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/bills/removebill/" method="post" name="removebill">
+                                            <input type="hidden"  name="id" value="<%=bills[i].id%>">
+                                            <button type="submit" class="btn btn-danger">Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                    <% } %>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+          </div>
+        <% include partials/footer.ejs %>
+      </div>
+    </div>
+  </div>
+  <% include partials/scripts.ejs %>
+ 
+</body>
+
+</html>

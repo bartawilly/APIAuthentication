@@ -55,6 +55,7 @@
                     </thead>
                     <tbody>
                         <% var groupUsers = groupsUsers[i] %>
+                        <% let deactivate = groupUsers.length ===  1 ? true: false %>
                         <% for (var j =0; j <groupUsers.length; j++ ) { %>
                       <tr>
                         <td><%=groupUsers[j].firstName%></td>
@@ -64,7 +65,11 @@
                             <% if (groups[i].name == 'admins'){ %>
                             <form action="/users/removeadmin" method="post" name="removeadmin">
                                 <input type="hidden"  name="id" value="<%=groupUsers[j]._id%>">
-                              <button type="submit" class="btn btn-danger">remove Admin</button>
+                                <% if(deactivate) { %>
+                              <button type="submit" class="btn btn-danger" disabled>remove Admin</button>
+                                <% } else {%>
+                                <button type="submit" class="btn btn-danger">remove Admin</button>
+                                <% } %>
                             </form>
                             <% } else {%>
                               <form action="/users/makeadmin" method="post" name="makeadmin">
@@ -76,7 +81,11 @@
                         <td>
                           <form action="/users/removeuser" method="post" name="removeuser">
                             <input type="hidden"  name="id" value="<%=groupUsers[j]._id%>">
-                            <button type="submit" class="btn btn-danger">Permanently remove</button>
+                            <% if(deactivate) { %>
+                            <button type="submit" class="btn btn-danger" disabled >Permanently remove</button>
+                            <% } else {%>
+                              <button type="submit" class="btn btn-danger" >Permanently remove</button>
+                              <% } %>
                           </form>
                         </td>
                       </tr>

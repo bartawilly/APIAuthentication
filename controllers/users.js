@@ -115,16 +115,26 @@ module.exports={
         if(!foundUser){
             res.status(403).send({error:'User is not exist'});
             }
-        foundUser.password = req.value.body.password;
-        if(await userServices.updateUserPassword(foundUser)){
-            res.redirect('/users/edituser/');
+        let oldPassword = req.value.body.oldPassword;
+        let newPassword = req.value.body.password;
 
+        if(await foundUser.isValidPassword(oldPassword)){  
+            foundUser.password = req.value.body.password;
+            if(await userServices.updateUserPassword(foundUser)){
+                res.redirect('/users/edituser/');
+    
+            }
+            else{
+    
+                req.flash('updateUserPasswordError','Error updating your user password.');
+                res.redirect('/users/edituser/');
+            }
         }
         else{
-
-            req.flash('updateUserPasswordError','Error updating your user password.');
+            req.flash('updateUserPasswordError','Old Password is incorrect!');
             res.redirect('/users/edituser/');
         }
+        
         
     },
     makeAdmin: async (req, res, next) => {

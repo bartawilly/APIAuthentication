@@ -80,6 +80,24 @@
             <p>New Bill</p>
           </a>
         </li>
+        <li <% if (active === 'bills') { %> class="active" <% } %> >
+          <a href="/bills/getbills">
+            <i class="nc-icon nc-paper"></i>
+            <p>All Bills</p>
+          </a>
+        </li>
+        <li <% if (active === 'returnItem') { %> class="active" <% } %> >
+          <a href="/bills/returnbilleditem">
+            <i class="nc-icon nc-simple-remove"></i>
+            <p>Return Item</p>
+          </a>
+        </li>
+        <li <% if (active === 'report') { %> class="active" <% } %> >
+          <a href="/reports/report">
+            <i class="nc-icon nc-single-copy-04"></i>
+            <p>Reports</p>
+          </a>
+        </li>
       </ul>
     </div>
   </div>

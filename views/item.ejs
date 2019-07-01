@@ -31,13 +31,13 @@
                         <div class="col-md-6 pr-1">
                             <div class="form-group">
                             <label>Code</label>
-                            <input type="text" name="code" class="form-control">
+                            <input type="text" name="code" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-6 pr-1">
                             <div class="form-group">
                               <label>Name</label>
-                              <input type="text" name="name" class="form-control">
+                              <input type="text" name="name" class="form-control" required>
                             </div>
                         </div>
                     </div>
@@ -45,13 +45,13 @@
                         <div class="col-md-4 pr-1">
                             <div class="form-group">
                             <label>Cost</label>
-                            <input type="number" name="cost" class="form-control">
+                            <input type="number" name="cost" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-4 pr-1">
                             <div class="form-group">
                                 <label>Price</label>
-                                <input type="number" name="price" class="form-control">
+                                <input type="number" name="price" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-4 pr-1">
@@ -65,7 +65,7 @@
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
                             <label>Quantity</label>
-                            <input type="number" name="quantity" class="form-control" min="1" value="1">
+                            <input type="number" name="quantity" class="form-control" min="1" value="1" required>
                             </div>
                         </div>
                     </div>
@@ -73,25 +73,34 @@
                         <div class="col-md-6 pr-1">
                             <div class="form-group">
                                 <label>Provider</label>
-                                <select class="form-control border-input" placeholder="Choose a provider" name="providerId">
+                                <input type="hidden" id="providerIdAdd" name='providerId'/>
+                                <input type="text" id="providerPhoneAdd" onfocusout="checkProviderPhone(this.id)" name='providerPhone' placeholder='Enter Provider Phone' class="form-control border-input" required/>
+                                <span class="error" id="providerPhoneAddError" aria-live="polite"></span>
+                               <!-- <select class="form-control border-input" placeholder="Choose a provider" name="providerId">
                                         <% if (providers) { %>
                                         <% for (var i =0; i<providers.length;i++) { %>
                                         <option value="<%=providers[i].id%>"><%=providers[i].name%></option>
                                         <% } %>
                                         <% } %>
                                 </select>
+                                -->
                             </div>
                         </div>
                         <div class="col-md-6 pr-1">
                             <div class="form-group">
-                                <label>Provider</label>
-                                <select class="form-control border-input" placeholder="Choose a category" name="categoryId">
+                                <label>Category</label>
+                                <input type="hidden" id="categoryIdAdd" name='categoryId'/>
+                                <input type="text" id="categoryNameAdd" onfocusout="checkCategoryName(this.id)" name='categoryName' placeholder='Enter Category Name' class="form-control border-input" required/>
+                                <span class="error" id="categoryNameAddError" aria-live="polite"></span>
+                                <!--
+                                <select class="form-control border-input" placeholder="Choose a category" name="categoryId" required>
                                         <% if (categories) { %>
                                         <% for (var i =0; i<categories.length;i++) { %>
                                         <option value="<%=categories[i].id%>"><%=categories[i].name%></option>
                                         <% } %>
                                         <% } %>
                                 </select>
+                                -->
                             </div>
                         </div>
                     </div>
@@ -117,27 +126,32 @@
                         <div class="row">
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
-                                  <label>Name</label>
-                                  <select class="form-control border-input" placeholder="Choose a provider" name="itemId">
+                                    <label>Name</label>
+                                    <input type="hidden" id="itemId" name='itemId'/>
+                                    <input type="text" id="itemCode" onfocusout="checkItemCode(this.id)" name='itemCode' placeholder='Enter item code' class="form-control border-input" required/>
+                                    <span class="error" id="itemCodeError" aria-live="polite"></span>
+                                    <!--
+                                    <select class="form-control border-input" placeholder="Choose a provider" name="itemId" required>
                                         <% if (items) { %>
                                         <% for (var i =0; i<items.length;i++) { %>
                                         <option value="<%=items[i].id%>"><%=items[i].name%></option>
                                         <% } %>
                                         <% } %>
-                                </select>
+                                    </select>
+                                    -->
                                 </div>
                             </div>
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
                                     <label>Quantity</label>
-                                    <input type="number" name="quantity" class="form-control" min="1" value="1">
+                                    <input type="number" name="quantity" class="form-control" min="1" value="1" required>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="update ml-auto mr-auto">
-                              <button type="submit" class="btn btn-primary btn-round">Add Exoense</button>
+                              <button type="submit" class="btn btn-primary btn-round">Add Item</button>
                             </div>
                         </div>
                       </form>
@@ -185,13 +199,36 @@
                                       <td><%=items[i].discount%></td>
                                       <td><%=items[i].finalPrice%></td>
                                       <td><%=items[i].quantity%></td>
-                                      <td><%=itemProviders[i].name%></td>
-                                      <td><%=itemCategories[i].name%></td>
+                                      <% if (typeof(itemProviders[i]) != 'undefined'){ %>
+                                        <td><%=itemProviders[i].name%></td>
+                                        <% } else { %> 
+                                        <td>Empty</td>
+                                        <% } %>
+                                        <% if (typeof(itemCategories[i]) != 'undefined'){ %>
+                                            <td><%=itemCategories[i].name%></td>
+                                        <% } else { %>    
+                                            <td>Empty</td>
+                                        <% } %>
                                       <td><%=items[i].createdAt%></td>
                                       <td><%=items[i].updatedAt%></td>
-                                      <td>
-                                          <a data-toggle="modal" data-target="#updateItem" onclick="updateItemModal(`<%=items[i].id%>`,`<%=items[i].code%>`,`<%=items[i].name%>`,`<%=items[i].cost%>`,`<%=items[i].price%>`,`<%=items[i].discount%>`, `<%=items[i].quantity%>`,`<%=itemProviders[i].id%>`, `<%=itemCategories[i].id%>`)" ><button class="btn btn-primary btn-round">Update</button></a>
-                                      </td>
+                                      <% if (typeof(itemProviders[i]) != 'undefined' && typeof(itemCategories[i]) != 'undefined' ){ %>
+                                        <td>
+                                                <a data-toggle="modal" data-target="#updateItem" onclick="updateItemModal(`<%=items[i].id%>`,`<%=items[i].code%>`,`<%=items[i].name%>`,`<%=items[i].cost%>`,`<%=items[i].price%>`,`<%=items[i].discount%>`, `<%=items[i].quantity%>`,`<%=itemProviders[i].id%>`,`<%=itemProviders[i].phone%>`, `<%=itemCategories[i].id%>`, `<%=itemCategories[i].name%>`)" ><button class="btn btn-primary btn-round">Update</button></a>
+                                        </td> 
+                                        <% } else if( typeof(itemProviders[i]) != 'undefined') { %> 
+                                            <td>
+                                                    <a data-toggle="modal" data-target="#updateItem" onclick="updateItemModal(`<%=items[i].id%>`,`<%=items[i].code%>`,`<%=items[i].name%>`,`<%=items[i].cost%>`,`<%=items[i].price%>`,`<%=items[i].discount%>`, `<%=items[i].quantity%>`,`<%=itemProviders[i].id%>`,`<%=itemProviders[i].phone%>`, `0` , `empty`)" ><button class="btn btn-primary btn-round">Update</button></a>
+                                            </td>
+                                        <% } else if( typeof(itemCategories[i]) != 'undefined') { %>
+                                            <td>
+                                                    <a data-toggle="modal" data-target="#updateItem" onclick="updateItemModal(`<%=items[i].id%>`,`<%=items[i].code%>`,`<%=items[i].name%>`,`<%=items[i].cost%>`,`<%=items[i].price%>`,`<%=items[i].discount%>`, `<%=items[i].quantity%>`,`0`,`empty`, `<%=itemCategories[i].id%>`, `<%=itemCategories[i].name%>`)" ><button class="btn btn-primary btn-round">Update</button></a>
+                                            </td>
+                                        <% } else { %> 
+                                            <td>
+                                                    <a data-toggle="modal" data-target="#updateItem" onclick="updateItemModal(`<%=items[i].id%>`,`<%=items[i].code%>`,`<%=items[i].name%>`,`<%=items[i].cost%>`,`<%=items[i].price%>`,`<%=items[i].discount%>`, `<%=items[i].quantity%>`,`0`,`empty`, `0`, `empty`)" ><button class="btn btn-primary btn-round">Update</button></a>
+                                            </td>
+                                        <% } %>
+                                      
                                       <td>
                                         <form action="/items/removeitem/" method="post" name="removeitem">
                                           <input type="hidden"  name="id" value="<%=items[i].id%>">
@@ -225,13 +262,13 @@
                                 <div class="col-md-6 pr-1">
                                     <div class="form-group">
                                     <label>Code</label>
-                                    <input type="text" name="code" class="form-control">
+                                    <input type="text" name="code" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-1">
                                     <div class="form-group">
                                         <label>Name</label>
-                                        <input type="text" name="name" class="form-control">
+                                        <input type="text" name="name" class="form-control" required>
                                     </div>
                                 </div>
                             </div>
@@ -239,13 +276,13 @@
                                 <div class="col-md-4 pr-1">
                                     <div class="form-group">
                                     <label>Cost</label>
-                                    <input type="number" name="cost" class="form-control">
+                                    <input type="number" name="cost" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 pr-1">
                                     <div class="form-group">
                                         <label>Price</label>
-                                        <input type="number" name="price" class="form-control">
+                                        <input type="number" name="price" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 pr-1">
@@ -259,7 +296,7 @@
                                 <div class="col-md-12 pr-1">
                                     <div class="form-group">
                                         <label>Quantity</label>
-                                        <input type="number" name="quantity" class="form-control" min="1">
+                                        <input type="number" name="quantity" class="form-control" min="1" required>
                                     </div>
                                 </div>
                             </div>
@@ -267,6 +304,11 @@
                                 <div class="col-md-6 pr-1">
                                     <div class="form-group">
                                         <label>Provider</label>
+                                        <input type="hidden" id="providerIdUpdate" name='providerId'/>
+                                        <input type="text" id="providerPhoneUpdate" onfocusout="checkProviderPhone(this.id)" name='providerPhone' placeholder='Enter Provider Phone' class="form-control border-input" required/>
+                                        <span class="error" id="providerPhoneUpdateError" aria-live="polite"></span>
+                               
+                                        <!--
                                         <select class="form-control border-input" placeholder="Choose a provider" name="providerId" >
                                                 <% if (providers) { %>
                                                 <% for (var i =0; i<providers.length;i++) { %>
@@ -274,18 +316,24 @@
                                                 <% } %>
                                                 <% } %>
                                         </select>
+                                        -->
                                     </div>
                                 </div>
                                 <div class="col-md-6 pr-1">
                                     <div class="form-group">
-                                        <label>Provider</label>
-                                        <select class="form-control border-input" placeholder="Choose a category" name="categoryId">
+                                        <label>Category</label>
+                                        <input type="hidden" id="categoryIdUpdate" name='categoryId'/>
+                                        <input type="text" id="categoryNameUpdate" onfocusout="checkCategoryName(this.id)" name='categoryName' placeholder='Enter Category Name' class="form-control border-input" required/>
+                                        <span class="error" id="categoryNameUpdateError" aria-live="polite"></span>
+                                        <!--
+                                        <select class="form-control border-input" placeholder="Choose a category" name="categoryId" required>
                                                 <% if (categories) { %>
                                                 <% for (var i =0; i<categories.length;i++) { %>
                                                 <option value="<%=categories[i].id%>"><%=categories[i].name%></option>
                                                 <% } %>
                                                 <% } %>
                                         </select>
+                                        -->
                                     </div>
                                 </div>
                             </div>
@@ -305,6 +353,7 @@
   </div>
   <% include partials/scripts.ejs %>
   <script>
+      /*
   $(function() {
     
     $("form[name='saveItem']").validate({
@@ -315,6 +364,7 @@
         price:"required",
         quantity:"required",
         providerId: "required",
+        providerPhone: "required",
         categoryId: "required"
       },
       
@@ -324,7 +374,8 @@
         cost: "Please enter Item Cost",
         price:"Please enter Item Price",
         quantity:"Please enter Item Quantity",
-        providerId: "Please Choose the item Provider",
+        providerId: "Please add the item provider ID",
+        providerPhone: "Please add the item provider phone",
         categoryId: "Please Choose the item Category "
       },
       submitHandler: function(form) {
@@ -360,6 +411,7 @@
             price:"required",
             quantity:"required",
             providerId: "required",
+            providerPhone: "required",
             categoryId: "required"
           },
           
@@ -369,7 +421,8 @@
             cost: "Please enter Item Cost",
             price:"Please enter Item Price",
             quantity:"Please enter Item Quantity",
-            providerId: "Please Choose the item Provider",
+            providerId: "Please add the item provider ID",
+            providerPhone: "Please add the item provider phone",
             categoryId: "Please Choose the item Category "
           },
       submitHandler: function(form) {
@@ -377,7 +430,8 @@
       }
     });
   });
-  function updateItemModal(id, code, name, cost, price, discount, quantity, providerId, categoryId){
+  */
+  function updateItemModal(id, code, name, cost, price, discount, quantity, providerId, providerPhone, categoryId, categoryName){
     let form = document.forms['updateItemForm'];
     form.elements["id"].value = id;
     form.elements["code"].value = code;
@@ -387,9 +441,99 @@
     form.elements["discount"].value = discount;
     form.elements["quantity"].value = quantity;
     form.elements["providerId"].value = providerId;
+    form.elements["providerPhone"].value = providerPhone;
     form.elements["categoryId"].value = categoryId;
+    form.elements["categoryName"].value = categoryName;
 
   };
+  const items = <%- JSON.stringify(items) %>;
+
+  function checkItemCode(id){
+
+    let itemCodeInput = document.getElementById(id);
+    var itemIdInput;
+    var itemCodeError;
+    var itemId;
+    itemIdInput = document.getElementById("itemId");
+    itemCodeError = document.getElementById("itemCodeError")
+
+    if(items.find(item => item.code == itemCodeInput.value)){
+    itemId = items.find(item => item.code == itemCodeInput.value).id;
+    itemIdInput.value=itemId;
+    itemCodeError.className = "error";
+    itemCodeError.innerHTML = "";
+    itemCodeInput.setCustomValidity("");
+    }
+    else{
+    itemCodeInput.setCustomValidity("Enter a valid item code!");
+    itemCodeError.innerHTML = "Enter a valid item code!";
+    itemCodeError.className = "error active";
+    itemIdInput.value=0;
+    }
+  }
+
+  const providers = <%- JSON.stringify(providers) %>;
+
+  function checkProviderPhone(id){
+
+    let providerPhoneInput = document.getElementById(id);
+    var providerIdInput;
+    var providerPhoneError;
+    var providerId;
+    if(id.includes("Add")){
+        providerIdInput = document.getElementById("providerIdAdd");
+        providerPhoneError = document.getElementById("providerPhoneAddError")
+    }
+    else if(id.includes("Update")){
+        providerIdInput = document.getElementById("providerIdUpdate");
+        providerPhoneError = document.getElementById("providerPhoneUpdateError")
+    }
+        if(providers.find(provider => provider.phone == providerPhoneInput.value)){
+        providerId = providers.find(provider => provider.phone == providerPhoneInput.value).id;
+        providerIdInput.value=providerId;
+        providerPhoneError.className = "error";
+        providerPhoneError.innerHTML = "";
+        providerPhoneInput.setCustomValidity("");
+        }
+        else{
+        providerPhoneInput.setCustomValidity("Enter a valid phone!");
+        providerPhoneError.innerHTML = "Enter a valid phone!";
+        providerPhoneError.className = "error active";
+        providerIdInput.value=0;
+    }
+  }
+
+  const categories = <%- JSON.stringify(categories) %>;
+
+  function checkCategoryName(id){
+
+    let categoryNameInput = document.getElementById(id);
+    var categoryIdInput;
+    var categoryNameError;
+    var categoryId;
+    if(id.includes("Add")){
+        categoryIdInput = document.getElementById("categoryIdAdd");
+        categoryNameError = document.getElementById("categoryNameAddError")
+    }
+    else if(id.includes("Update")){
+        categoryIdInput = document.getElementById("categoryIdUpdate");
+        categoryNameError = document.getElementById("categoryNameUpdateError")
+    }
+        if(categories.find(category => category.name == categoryNameInput.value)){
+        categoryId = categories.find(category => category.name == categoryNameInput.value).id;
+        categoryIdInput.value=categoryId;
+        categoryNameError.className = "error";
+        categoryNameError.innerHTML = "";
+        categoryNameInput.setCustomValidity("");
+        }
+        else{
+        categoryNameInput.setCustomValidity("Enter a valid category name!");
+        categoryNameError.innerHTML = "Enter a valid category name!";
+        categoryNameError.className = "error active";
+        categoryIdInput.value=0;
+    }
+  }
+
   </script>
 </body>
 

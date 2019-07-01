@@ -85,6 +85,8 @@
                                       <td><%=customers[i].updatedAt%></td>
                                       <td><%=creators[i]%></td>
                                       <td><%=updaters[i]%></td>
+                                      <% if(customers[i].name != "guest"){ %>
+
                                       <td>
                                           <a data-toggle="modal" data-target="#updateCustomer" onclick="updateCustomerModal(`<%=customers[i].id%>`,`<%=customers[i].name%>`,`<%=customers[i].mobile%>`)" ><button class="btn btn-primary btn-round">Update</button></a>
                                       </td>
@@ -94,6 +96,7 @@
                                           <button type="submit" class="btn btn-danger">Remove</button>
                                         </form>
                                       </td>
+                                      <% } %>
                                     </tr>
                                     <% } %>
                                     <% } %>

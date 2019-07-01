@@ -43,6 +43,8 @@ app.use('/vouchers/',require('./routes/vouchers'));
 app.use('/items/',require('./routes/items'));
 app.use('/payments/',require('./routes/payments'));
 app.use('/bills/',require('./routes/bills'));
+app.use('/reports/',require('./routes/reports'));
+
 
 
 //Start the server

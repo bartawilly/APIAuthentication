@@ -40,6 +40,7 @@ module.exports = {
             lastname: Joi.string().required()
         }),
         updateUserPassword:Joi.object().keys({
+            oldPassword: Joi.string().required(),
             password: Joi.string().required()
         }),
         makeAdmin:Joi.object().keys({
@@ -103,7 +104,9 @@ module.exports = {
             quantity: Joi.number().required(),
             discount: Joi.number().optional(),
             providerId: Joi.number().required(),
-            categoryId: Joi.number().required()
+            providerPhone: Joi.string().required(),
+            categoryId: Joi.number().required(),
+            categoryName:Joi.string().required()
 
         }),
         removeItemSchema:Joi.object().keys({
@@ -111,7 +114,8 @@ module.exports = {
         }),
         updateItemQuantitySchema:Joi.object().keys({
             itemId: Joi.required(),
-            quantity: Joi.number().required()
+            quantity: Joi.number().required(),
+            itemCode: Joi.string().required()
         }),
         paymentSchema:Joi.object().keys({
             id: Joi.optional(),
@@ -121,21 +125,35 @@ module.exports = {
         removePaymentSchema:Joi.object().keys({
             id: Joi.required()
         }),
-        previewBillSchema:Joi.object().keys({
+        placeOrderSchema:Joi.object().keys({
             itemId: Joi.array().required(),
             itemCode:Joi.array().required(),
             ItemQuantity:Joi.array().required(),
             itemFinalPrice:Joi.array().required(),
             itemFinalTotalPrice:Joi.array().required(),
             totalAmount:Joi.number().required(),
-            taxpercentage:Joi.number().optional(),
-            taxAmount:Joi.number().optional(),
+            taxpercentage:Joi.optional(),
+            taxAmount:Joi.optional(),
             finalTotalAmount:Joi.number().required(),
-            customerMobile:Joi.string().required(),
-            customerId:Joi.number().required(),
+            customerMobile:Joi.optional(),
+            customerId:Joi.optional(),
             paymentId:Joi.number().required(),
-            voucherText:Joi.string().required(),
-            voucherId:Joi.number().required()
+            voucherText:Joi.optional(),
+            voucherId:Joi.optional()
+        }),
+        removeBillSchema:Joi.object().keys({
+            id: Joi.required()
+        }),
+        getBilledItemsSchema:Joi.object().keys({
+            billId: Joi.required()
+        }),
+        removeBilledItemSchema:Joi.object().keys({
+            billedItemId: Joi.required(),
+            billId: Joi.required(),
+            itemId:Joi.required(),
+            itemAmount: Joi.required(),
+            itemTaxAmount: Joi.required(),
+            itemFinalAmount: Joi.required()
         })
     }
 }

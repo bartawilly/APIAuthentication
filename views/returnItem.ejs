@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+  <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+        <div class="content">
+            <% if (errorMsg) { %>
+              <div class="alert alert-danger"><%= errorMsg %></div>
+          <% } %>
+          <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                    <h5 class="card-title">Return Item</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/bills/getbilleditems/" method="get" name="getBilledItems">
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                    <label>Bill ID</label>
+                                    <input type="number" name="billId" placeholder="Enter your bill ID" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="update ml-auto mr-auto">
+                                <button type="submit" class="btn btn-primary btn-round">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-6"> 
+                                    <h4 class="card-title">Bill</h4>
+                                </div>
+                                <% if (typeof billId !== 'undefined') { %>
+                                <div class="col-md-6 text-right">
+                                    <form action="/bills/printbill/" method="get" name="printbill">
+                                        <input type="hidden"  name="billId" value="<%=billId%>">
+                                        <button type="submit" class="btn btn-primary btn-round">Print</button>
+                                    </form>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+  
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class=" text-primary">
+                                      <th>BilledItem ID</th>
+                                      <th>Item ID</th>
+                                      <th>Item Code</th>
+                                      <th>Item Name</th>
+                                      <th>Orignal Amount</th>
+                                      <th>Applied Voucher</th>
+                                      <th>Applied Tax</th>
+                                      <th>Tax Amount</th>
+                                      <th>Final Amount</th>
+                                      <th></th>
+                                    </thead>
+                                    <tbody>
+                                    <% if (typeof billedItemsIds !== 'undefined') { %>
+                                    <% for (var i =0; i<billedItemsIds.length;i++ ) { %>
+                                      <tr>
+                                        <td><%=billedItemsIds[i]%></td>
+                                        <td><%=itemIds[i]%></td>
+                                        <td><%=itemCodes[i]%></td>
+                                        <td><%=itemNames[i]%></td>
+                                        <td><%=itemAmounts[i]%></td>
+                                        <td><%=voucherText%></td>
+                                        <td><%=taxPercentage%></td>
+                                        <td><%=itemTaxAmounts[i]%></td>
+                                        <td><%=itemFinalAmounts[i]%></td>
+                                        <td>
+                                          <form action="/bills/removebilleditem/" method="post" name="removeBilledItem">
+                                            <input type="hidden"  name="billedItemId" value="<%=billedItemsIds[i]%>">
+                                            <input type="hidden"  name="billId" value="<%=billId%>">
+                                            <input type="hidden"  name="itemId" value="<%=itemIds[i]%>">
+                                            <input type="hidden"  name="itemAmount" value="<%=itemAmounts[i]%>">
+                                            <input type="hidden"  name="itemTaxAmount" value="<%=itemTaxAmounts[i]%>">
+                                            <input type="hidden"  name="itemFinalAmount" value="<%=itemFinalAmounts[i]%>">
+                                            <button type="submit" class="btn btn-danger">Remove</button>
+                                          </form>
+                                        </td>
+                                      </tr>
+                                      <% } %>
+                                      <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+  
+                    </div>
+                </div>
+            </div>
+        <% include partials/footer.ejs %>
+      </div>
+    </div>
+  </div>
+  <% include partials/scripts.ejs %>
+ 
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <% include partials/header.ejs %>
+
+<body class="">
+    <div class="wrapper ">
+      <% include partials/sidebar.ejs %>
+        <div class="main-panel">
+        <!-- Navbar -->
+        <% include partials/nav.ejs %>
+        <!-- End Navbar -->
+        <!-- <div class="panel-header panel-header-sm">
+    
+    
+  </div> -->
+            <div class="container-fluid">
+                <div class="row text-center">
+                    <h1>Success</h1>
+                    <% if (successMsg) { %>
+                    <p><%= successMsg %></p>
+                    <% } %>
+                    <a href="/bills/newbill"><button class="btn btn-primary">Back</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+      <% include partials/scripts.ejs %>
+</body>
+</html>
